@@ -11,15 +11,20 @@
         "format": "prettier --write './**/*.{ts,tsx,css,json}' --config ./.prettierrc"
     },
     "dependencies": {
-        "@types/node": "18.11.9",
+        "@types/node": "^18.11.9",
         "@types/react": "18.0.25",
         "@types/react-dom": "18.0.9",
+        "bcryptjs": "^2.4.3",
         "eslint-config-next": "13.0.4",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.7.2",
         "next": "13.0.4",
         "react": "18.2.0",
         "react-dom": "18.2.0"
     },
     "devDependencies": {
+        "@types/bcryptjs": "^2.4.2",
+        "@types/jsonwebtoken": "^8.5.9",
         "@typescript-eslint/eslint-plugin": "^5.43.0",
         "autoprefixer": "^10.4.13",
         "eslint": "^8.28.0",
