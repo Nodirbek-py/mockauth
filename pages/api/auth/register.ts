@@ -1,0 +1,107 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcryptjs';
+import jsonwebtoken from 'jsonwebtoken';
+
+import { userModel } from '../_db';
+
+interface Data {
+    username?: string | string[];
+    password?: string | string[];
+    accessToken?: string;
+    refreshToken?: string;
+    user?: { username: string };
+    message: string;
+}
+
+declare const process: {
+    env: {
+        JWT_SECRET: string;
+        REFRESH_TOKEN_SECRET: string;
+    };
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> {
+    return await new Promise((resolve) => {
+        if (req.method === 'POST') {
+            const { username, password2 } = req.body;
+            const data: any = {
+                username: [],
+                password: [],
+            };
+            let valid = true;
+            for (const key in data) {
+                if (req.body[key] === '') {
+                    data[key].push('This field may not be blank');
+                    valid = false;
+                } else if (key === 'username') {
+                    if (username.length < 5) {
+                        data.username.push('Username must be logner than 5 characters');
+                        valid = false;
+                    }
+                } else if (key === 'password') {
+                    if (req.body[key] !== password2) {
+                        data.password.push('Passwords are not matching');
+                        valid = false;
+                    } else if (req.body[key].length <= 8) {
+                        data.password.push('Passwords must be longer than 8 characters');
+                        valid = false;
+                    }
+                }
+            }
+            if (valid) {
+                try {
+                    void userModel
+                        .findOne({ username })
+                        .exec()
+                        .then((exists) => {
+                            if (exists === null) {
+                                userModel
+                                    .create({
+                                        username,
+                                        password: bcrypt.hashSync(req.body.password, 10),
+                                    })
+                                    .then((response) => {
+                                        const accessToken = jsonwebtoken.sign(
+                                            { id: response._id, username: response.username },
+                                            process.env.JWT_SECRET,
+                                            {
+                                                expiresIn: '3d',
+                                            },
+                                        );
+                                        const refreshToken = jsonwebtoken.sign(
+                                            { id: response._id, username: response.username },
+                                            process.env.REFRESH_TOKEN_SECRET,
+                                            { expiresIn: '7d' },
+                                        );
+                                        res.writeHead(201, 'Created');
+                                        res.json({
+                                            message: 'User is created successfully',
+                                            accessToken,
+                                            refreshToken,
+                                            user: response.username,
+                                        });
+                                    })
+                                    .catch(() => {
+                                        res.writeHead(501, 'Internal error');
+                                        res.end();
+                                        return resolve();
+                                    });
+                            } else {
+                                res.writeHead(403, 'Bad Request');
+                                res.json({ message: 'Username is taken, please choose another one' });
+                            }
+                        });
+                } catch (error: any) {
+                    res.writeHead(501, 'Internal error');
+                    res.json({ message: error });
+                }
+            } else {
+                res.writeHead(403, 'Bad Request');
+                res.json({ ...data, message: 'Invalid request body' });
+            }
+        } else if (req.method === 'GET') {
+            res.writeHead(200, 'OK');
+            res.json({ message: 'You cannot get anything rahter then this message' });
+        }
+    });
+}
