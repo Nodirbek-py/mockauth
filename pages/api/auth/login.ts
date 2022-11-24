@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
 import jsonwebtoken from 'jsonwebtoken';
+
 import { userModel } from '../_db';
 
 interface Data {
@@ -22,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             const { username, password } = req.body;
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (!username || !password) {
-                res.status(403).json({ message: 'Please, send needed params' });
+                res.status(400).json({ message: 'Please, send needed params' });
             } else {
                 void userModel
                     .findOne({ username })
@@ -55,14 +56,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         }
                     })
                     .catch(() => {
-                        res.writeHead(501, 'Internal server error');
-                        res.end();
+                        res.status(503).json({ message: 'Internal server error' });
                         return resolve();
                     });
             }
         } else if (req.method === 'GET') {
-            res.writeHead(200, 'OK');
-            res.json({ message: 'You cannot get anything rahter then this message 😃' });
+            res.status(200).json({ message: 'You cannot get anything rahter then this message 😃' });
+        } else {
+            res.status(501).json({ message: '☹️' });
         }
     });
 }
