@@ -22,8 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             const { username, password } = req.body;
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (!username || !password) {
-                res.writeHead(403, 'Invalid request body');
-                res.json({ message: 'Please, send needed params' });
+                res.status(403).json({ message: 'Please, send needed params' });
             } else {
                 void userModel
                     .findOne({ username })
