@@ -90,13 +90,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                             }
                         });
                 } catch (error: any) {
-                    res.status(501).json({ message: error });
+                    res.status(503).json({ message: error });
                 }
             } else {
-                res.status(403).json({ ...data, message: 'Invalid request body' });
+                res.status(400).json({ ...data, message: 'Invalid request body' });
             }
         } else if (req.method === 'GET') {
             res.status(200).json({ message: 'You cannot get anything rahter then this message 😃' });
+        } else {
+            res.status(501).json({ message: '☹️' });
         }
     });
 }
