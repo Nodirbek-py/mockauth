@@ -3,15 +3,7 @@ import bcrypt from 'bcryptjs';
 import jsonwebtoken from 'jsonwebtoken';
 
 import { userModel } from '../_db';
-
-interface Data {
-    username?: string | string[];
-    password?: string | string[];
-    accessToken?: string;
-    refreshToken?: string;
-    user?: { username: string };
-    message: string;
-}
+import { RegisterData } from '../_interfaces';
 
 declare const process: {
     env: {
@@ -20,7 +12,7 @@ declare const process: {
     };
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<RegisterData>): Promise<void> {
     return await new Promise((resolve) => {
         if (req.method === 'POST') {
             const { username, password2 } = req.body;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import mongoose, { ConnectOptions } from 'mongoose';
 
 declare const process: {
@@ -29,5 +30,21 @@ const userSchema = new mongoose.Schema(
     { collection: 'users' },
 );
 
-// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+const postSchema = new mongoose.Schema(
+    {
+        title: {
+            type: String,
+            unique: false,
+            required: true,
+        },
+        body: {
+            type: String,
+            unique: false,
+            required: false,
+        },
+    },
+    { collection: 'posts' },
+);
+
 export const userModel = mongoose.models.User || mongoose.model('User', userSchema);
+export const postModel = mongoose.models.Post || mongoose.model('Post', postSchema);

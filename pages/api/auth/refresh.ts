@@ -2,18 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import jsonwebtoken from 'jsonwebtoken';
 
 import { userModel } from '../_db';
-
-interface Data {
-    message: string;
-    accessToken?: string;
-}
-
-interface DecodedToken {
-    id: string;
-    username: string;
-    exp: number;
-    iat: number;
-}
+import { DecodedToken, RefreshData } from '../_interfaces';
 
 declare const process: {
     env: {
@@ -22,7 +11,7 @@ declare const process: {
     };
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<RefreshData>): Promise<void> {
     return await new Promise((resolve) => {
         if (req.method === 'POST') {
             const { refreshToken } = req.body;
