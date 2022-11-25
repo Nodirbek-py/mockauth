@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         .findOne({ username: decoded.username })
                         .then((user) => {
                             const accessToken = jsonwebtoken.sign(
-                                { id: user._id, username: user.username },
+                                { id: user._id, username: user.username, isAdmin: user.isAdmin },
                                 process.env.JWT_SECRET,
                                 {
                                     expiresIn: '3d',
