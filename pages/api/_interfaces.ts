@@ -36,3 +36,22 @@ export interface DecodedToken {
     iat: number;
     isAdmin: boolean;
 }
+
+interface PrivatePeople {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    dob: string;
+    address: string;
+    phoneNumber: string;
+    bankAccount: {
+        bankName: string;
+        iban: string;
+        country: string;
+    };
+}
+
+export interface PrivateData {
+    message?: string;
+    posts?: PrivatePeople[];
+}
