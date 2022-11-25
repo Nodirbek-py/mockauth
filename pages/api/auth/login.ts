@@ -36,14 +36,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                                 res.status(401).json({ message: 'Password is incorrect' });
                             } else {
                                 const accessToken = jsonwebtoken.sign(
-                                    { id: user._id, username: user.username },
+                                    { id: user._id, username: user.username, isAdmin: user.isAdmin },
                                     process.env.JWT_SECRET,
                                     {
                                         expiresIn: '3d',
                                     },
                                 );
                                 const refreshToken = jsonwebtoken.sign(
-                                    { id: user._id, username: user.username },
+                                    { id: user._id },
                                     process.env.REFRESH_TOKEN_SECRET,
                                     { expiresIn: '7d' },
                                 );

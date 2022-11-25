@@ -59,17 +59,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                                     .create({
                                         username,
                                         password: bcrypt.hashSync(req.body.password, 10),
+                                        isAdmin: false,
                                     })
                                     .then((response) => {
                                         const accessToken = jsonwebtoken.sign(
-                                            { id: response._id, username: response.username },
+                                            {
+                                                id: response._id,
+                                                username: response.username,
+                                                isAdmin: response.isAdmin,
+                                            },
                                             process.env.JWT_SECRET,
                                             {
                                                 expiresIn: '3d',
                                             },
                                         );
                                         const refreshToken = jsonwebtoken.sign(
-                                            { id: response._id, username: response.username },
+                                            {
+                                                username: response.username,
+                                            },
                                             process.env.REFRESH_TOKEN_SECRET,
                                             { expiresIn: '7d' },
                                         );
