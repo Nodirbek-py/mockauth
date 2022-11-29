@@ -101,7 +101,7 @@ fetch('https://mockauth.vercel.com/api/posts/',
                     <p className='text-neutral-200 text-xl my-4'>
                         You can see that we have authorization here, we need token in order to send requests ang get
                         desired response. To get this token you need to login to your account or register if you don
-                        {"'"}t have one. See the following snippet for registration
+                        {'\''}t have one. See the following snippet for registration
                     </p>
                     <SyntaxHighlighter language='javascript' style={a11yDark}>
                         {`
