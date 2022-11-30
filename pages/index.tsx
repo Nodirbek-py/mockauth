@@ -11,7 +11,7 @@ export default function Home(): React.ReactNode {
                 <link rel='icon' href='/icon.png' />
             </Head>
             <header className='min-h-screen'>
-                <div className='h-12 shadow-md fixed w-screen backdrop-blur bg-white/0'>
+                <div className='h-12 shadow-md fixed w-screen backdrop-blur bg-white/0 z-50'>
                     <nav className='max-w-7xl mx-auto h-full flex items-center justify-between px-6'>
                         <div>
                             <h1 className='text-neutral-200 text-xl text-opacity-80 hover:text-opacity-100 cursor-pointer'>
@@ -101,7 +101,7 @@ fetch('https://mockauth.vercel.com/api/posts/',
                     <p className='text-neutral-200 text-xl my-4'>
                         You can see that we have authorization here, we need token in order to send requests ang get
                         desired response. To get this token you need to login to your account or register if you don
-                        {'\''}t have one. See the following snippet for registration
+                        {"'"}t have one. See the following snippet for registration
                     </p>
                     <SyntaxHighlighter language='javascript' style={a11yDark}>
                         {`
@@ -150,6 +150,28 @@ fetch('https://mockauth.vercel.com/api/auth/login',
                         <code className='text-orange-300'>
                             password: <b>adminpassword</b>
                         </code>
+                    </p>
+                    <p className='text-neutral-200 text-xl my-4'>
+                        Your <code className='text-orange-300'>accessToken</code> will expire in 3 days, so you need to
+                        refresh it via <code className='text-orange-300'>refreshToken</code>. This token expires in 7
+                        days. In order to refresh your access token you need to send{' '}
+                        <code className='text-orange-300'>POST</code> to this endpoint{' '}
+                        <code className='text-orange-300'>/auth/refresh</code>, and in the body you need to pass{' '}
+                        <code className='text-orange-300'>refreshToken</code>. See the sample below:
+                    </p>
+                    <SyntaxHighlighter language='javascript' style={a11yDark}>
+                        {`
+fetch('https://mockauth.vercel.com/api/auth/refresh', 
+    { 
+        method: 'POST',
+        body: JSON.stringify({refreshToken: '<token>'})   
+    })
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+                        `}
+                    </SyntaxHighlighter>
+                    <p className='text-neutral-200 text-md my-4 italic'>
+                        Note: If <span className='text-orange-300'>refreshToken</span> is also expired, you need to log in again
                     </p>
                     <p className='text-neutral-200 text-xl my-4'>
                         Here are the sample responses from various endpoints
@@ -227,6 +249,14 @@ fetch('https://mockauth.vercel.com/api/auth/login',
 `}
                         </SyntaxHighlighter>
                     </p>
+                    <code className='text-orange-300'>/auth/refresh</code>:
+                    <SyntaxHighlighter language='json' style={a11yDark}>
+                            {`
+{
+    "accessToken": "<accessToken>",
+}
+`}
+                        </SyntaxHighlighter>
                 </section>
             </main>
 
